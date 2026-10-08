@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>En una nota</title>
+<meta name="description" content="En una nota: suena una canción y gana el primero que aprieta el botón y la adivina. Reglas del juego.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+/* Una sola columna, mismo escenario que el juego: gris oscuro, azul verdoso, y el botón como única pieza de color fuerte. */
+:root{
+  --bg:#262624; --panel:#30302e; --line:#45453f; --fg:#f5f4ef; --dim:#a8a69d;
+  --title:#4dbfe0; --strong:#1597c4; --deep:#0b5f7d; --warn:#ffc53d;
+  --display:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,sans-serif;
+  --body:"Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:17px/1.55 var(--body);margin:0}
+.wrap{max-width:720px;margin:0 auto;padding-inline:20px;padding-block:36px 64px;display:flex;flex-direction:column;gap:44px}
+.eyebrow{font:800 13px/1 var(--display);letter-spacing:.22em;text-transform:uppercase;color:var(--title);margin:0}
+h1{font:900 clamp(40px,9vw,68px)/1 var(--display);margin:0;text-wrap:balance}
+h2{font:800 13px/1.2 var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--title);margin:0 0 14px}
+p{margin:0}
+.hero{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+.hero > .txt{display:flex;flex-direction:column;gap:18px;min-width:0}
+.lede{font-size:19px;color:var(--fg);max-width:34ch}
+.bz{width:clamp(130px,30vw,190px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+  font:900 clamp(26px,6vw,40px)/1 var(--display);color:#fff;
+  background:radial-gradient(circle at 35% 30%,#7fd6ee,var(--strong) 60%);
+  box-shadow:0 12px 0 var(--deep),0 0 60px #1597c466}
+@media (max-width:520px){.hero{grid-template-columns:1fr}.bz{order:-1;justify-self:center}}
+.dl{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.soon{display:inline-block;font:800 20px/1 var(--display);padding:20px 28px;border-radius:16px;border:2px dashed var(--title);color:var(--title)}
+a.btn{display:inline-block;background:#fff;color:#000;font:800 20px/1 var(--display);text-decoration:none;
+  padding:20px 28px;border-radius:16px;box-shadow:0 6px 0 #9ccbd9;transition:transform .06s,box-shadow .06s}
+a.btn:hover{background:#eaf7fb}
+a.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #9ccbd9}
+a.btn:focus-visible,a:focus-visible{outline:3px solid var(--warn);outline-offset:3px}
+.meta{color:var(--dim);font-size:15px}
+ol,ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+ol{counter-reset:paso}
+ol li{counter-increment:paso;display:grid;grid-template-columns:2.2em 1fr;gap:4px;background:var(--panel);border-radius:14px;padding:14px 16px}
+ol li::before{content:counter(paso);font:900 20px/1.4 var(--display);color:var(--title)}
+ol li > div{min-width:0}
+.note{border:2px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--dim);font-size:15.5px}
+.note b{color:var(--warn)}
+ul li{padding-left:1.2em;position:relative}
+ul li::before{content:"";position:absolute;left:0;top:.62em;width:.5em;height:.5em;border-radius:50%;background:var(--strong)}
+b{font-weight:700}
+a{color:var(--title)}
+footer{color:var(--dim);font-size:15px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="txt">
+      <h1>En una nota</h1>
+      <p class="lede">Suena una canción. Gana el primero que aprieta el botón y la adivina.</p>
+      <div class="dl">
+        <span class="soon">Muy pronto a la venta</span>
+        <span class="meta">Para Windows 10 u 11 de 64 bits.</span>
+      </div>
+    </div>
+    <div class="bz" aria-hidden="true">¡YA!</div>
+  </header>
+
+  <section>
+    <h2>Cómo entrar</h2>
+    <ol>
+      <li><div><b>Escaneá el código QR</b> que aparece en la pantalla grande con la cámara del celu.</div></li>
+      <li><div><b>Escribí tu nombre</b> y listo: ya tenés tu botonera.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Cómo es una ronda</h2>
+    <ol>
+      <li><div><b>Arranca la canción y tu botón se pone azul.</b> Mientras esté gris, no vale apretar.</div></li>
+      <li><div><b>¿La sacaste? Apretá.</b> El primero en tocar es el primero en responder. Si varios aprietan casi juntos, el juego arma la fila en orden de llegada.</div></li>
+      <li><div><b>Si tu botón se pone blanco, te toca.</b> Decí el nombre de la canción en voz alta.</div></li>
+      <li><div><b>Si acertás,</b> sumás un punto y se termina la ronda.</div></li>
+      <li><div><b>Si errás,</b> perdés un punto, tu botón queda rojo y quedás afuera de esa ronda. La oportunidad pasa al siguiente de la fila.</div></li>
+      <li><div><b>Si nadie la adivina,</b> la ronda se cierra sin puntos y pasamos a la próxima canción.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Los puntos</h2>
+    <ul>
+      <li>Se ven solo en la pantalla grande. En los celulares no aparecen.</li>
+      <li>Gana quien más puntos tenga al final de la noche.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>El VAR</h2>
+    <ul>
+      <li><b>Para qué sirve:</b> para reclamar cuando creés que apretaste antes que quien figura primero en la fila.</li>
+      <li><b>Cómo se pide:</b> con el botón "Pedir VAR" de tu celu. Te pide un segundo toque para confirmar.</li>
+      <li><b>Uno por ronda:</b> apenas alguien lo pide, nadie más puede pedir VAR en esa ronda.</li>
+      <li><b>Mientras se revisa,</b> las botoneras quedan bloqueadas y la pantalla grande muestra el orden de llegada con la diferencia en milisegundos.</li>
+      <li><b>Quién decide:</b> el operador, que valida o rechaza el reclamo.</li>
+      <li><b>Si te lo validan,</b> pasás a responder primero y conservás tu VAR para volver a usarlo. Si respondés mal, sigue quien había salido primero originalmente y después el resto en su orden.</li>
+      <li><b>Si te lo rechazan,</b> te quedás sin VAR por el resto de la noche. Responde quien salió primero y, si erra, continúa el orden de llegada.</li>
+      <li><b>Después del fallo,</b> el resultado queda cinco segundos en pantalla y el juego sigue solo.</li>
+      <li><b>Si lo pediste sin querer,</b> el operador puede anularlo: no perdés tu VAR y la ronda vuelve a tener el suyo disponible.</li>
+    </ul>
+  </section>
+
+</div>
+</body>
+</html>
