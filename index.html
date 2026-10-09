@@ -37,6 +37,14 @@ a.btn{display:inline-block;background:#fff;color:#000;font:800 20px/1 var(--disp
 a.btn:hover{background:#eaf7fb}
 a.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #9ccbd9}
 a.btn:focus-visible,a:focus-visible{outline:3px solid var(--warn);outline-offset:3px}
+[hidden]{display:none!important}
+.pf{display:flex;flex-direction:column;gap:8px;width:min(100%,380px)}
+.pf label{font-weight:700;font-size:15px;margin-top:4px}
+.pf input{font:inherit;font-size:18px;padding:13px 14px;border-radius:12px;border:2px solid var(--line);background:var(--panel);color:var(--fg);width:100%}
+.pf input:focus{outline:none;border-color:var(--title)}
+.pf button{border:0;cursor:pointer;margin-top:6px}
+.pf button:disabled{opacity:.6;cursor:default}
+.pm{color:#ff6b5e;font-weight:700;font-size:15px;min-height:1.3em}
 .meta{color:var(--dim);font-size:15px}
 ol,ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
 ol{counter-reset:paso}
@@ -60,7 +68,15 @@ footer{color:var(--dim);font-size:15px;border-top:1px solid var(--line);padding-
       <h1>En una nota</h1>
       <p class="lede">Suena una canción. Gana el primero que aprieta el botón y la adivina.</p>
       <div class="dl">
-        <a class="btn" href="https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=626170276-4a3c393a-ee18-48e9-bd4a-b86db129c356">Comprar · AR$ 2.500</a>
+        <a class="btn" id="buy" href="https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=626170276-4a3c393a-ee18-48e9-bd4a-b86db129c356">Comprar · AR$ 2.500</a>
+        <form id="pf" class="pf" hidden novalidate>
+          <label for="c1">¿A qué correo te mandamos el juego?</label>
+          <input id="c1" type="email" autocomplete="email" inputmode="email" placeholder="tu@correo.com">
+          <label for="c2">Repetilo, para evitar errores</label>
+          <input id="c2" type="email" autocomplete="off" inputmode="email" placeholder="tu@correo.com">
+          <p id="pm" class="pm" role="alert"></p>
+          <button class="btn" id="pb">Ir a pagar · AR$ 2.500</button>
+        </form>
         <span class="meta">Pagás con Mercado Pago. Te llegan por correo el link de descarga y tu código de activación.</span>
         <span class="meta">Para Windows 10 u 11 de 64 bits. Cada código activa el juego en una compu.</span>
       </div>
@@ -114,5 +130,30 @@ footer{color:var(--dim);font-size:15px;border-top:1px solid var(--line);padding-
   </section>
 
 </div>
+<script>
+(function(){
+  var SERVICIO = 'https://script.google.com/macros/s/AKfycbySMbhEIvs0FranMlcBIczNyHi4ebHcWhO3oi56PWFBp6fWe4ZLR0pDnrq78TAhasvC5w/exec';
+  var buy = document.getElementById('buy'), pf = document.getElementById('pf'), pm = document.getElementById('pm'), pb = document.getElementById('pb');
+  var c1 = document.getElementById('c1'), c2 = document.getElementById('c2'), FIJO = buy.href;
+  buy.addEventListener('click', function(e){ e.preventDefault(); buy.hidden = true; pf.hidden = false; c1.focus(); });
+  pf.addEventListener('submit', function(e){
+    e.preventDefault();
+    var a = c1.value.trim().toLowerCase(), b = c2.value.trim().toLowerCase();
+    if (!/^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/.test(a)){ pm.textContent = 'Revisá el correo: no parece una dirección válida.'; return; }
+    if (a !== b){ pm.textContent = 'Los dos correos no coinciden.'; return; }
+    pm.textContent = ''; pb.disabled = true; pb.textContent = 'Preparando el pago…';
+    var listo = false, plan = setTimeout(function(){ ir(FIJO); }, 12000);
+    function ir(u){ if (listo) return; listo = true; clearTimeout(plan); location.href = u; }
+    fetch(SERVICIO + '?accion=comprar&correo=' + encodeURIComponent(a))
+      .then(function(r){ return r.json(); })
+      .then(function(r){
+        if (r && r.ok && /^https:\/\/[a-z.]*mercadopago\.com/.test(r.url)) ir(r.url);
+        else if (r && r.motivo === 'correo'){ clearTimeout(plan); listo = true; pb.disabled = false; pb.textContent = 'Ir a pagar · AR$ 2.500'; pm.textContent = 'Revisá el correo: no parece una dirección válida.'; }
+        else ir(FIJO);
+      })
+      .catch(function(){ ir(FIJO); });
+  });
+})();
+</script>
 </body>
 </html>
